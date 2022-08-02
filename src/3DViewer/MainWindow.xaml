@@ -1,0 +1,78 @@
+﻿<Window x:Class="_3DViewer.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:_3DViewer" xmlns:controls="clr-namespace:_3DViewer.Controls"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        xmlns:prim="clr-namespace:_3DViewer.Primitives"
+        mc:Ignorable="d"
+        Title="WPF 3D Viewer" Height="800" Width="1200" MinHeight="640" MinWidth="960" MouseLeftButtonDown="Window_MouseLeftButtonDown" MouseLeftButtonUp="Window_MouseLeftButtonUp" MouseMove="Window_MouseMove" MouseRightButtonDown="Window_MouseRightButtonDown" MouseRightButtonUp="Window_MouseRightButtonUp" MouseWheel="Window_MouseWheel">
+    <Window.Resources>
+        <ObjectDataProvider x:Key="figureTypesEnum" MethodName="GetValues" ObjectType="{x:Type sys:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="prim:FigureType"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+    </Window.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="5*"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="3.5*"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Viewport3D Grid.Column="0" Name="_viewPort" ClipToBounds="True">
+            <Viewport3D.Camera>
+                <PerspectiveCamera x:Name="_camera"
+                                   FarPlaneDistance="9000"
+                                   NearPlaneDistance="0.001"
+                                   Position="0,0,10"
+                                   LookDirection="0,0,1"
+                                   FieldOfView="45"/>
+
+            </Viewport3D.Camera>
+        </Viewport3D>
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <GroupBox Header="Сцены:" Grid.Row="0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="6*"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <ListBox Grid.Row="0" Grid.ColumnSpan="2" Name="sceneList" Margin="5, 2, 5, 2">
+                        <ListBoxItem>Scene1</ListBoxItem>
+                        <ListBoxItem>Scene2</ListBoxItem>
+                        <ListBoxItem>Scene3</ListBoxItem>
+                        <ListBoxItem>Scene4</ListBoxItem>
+                    </ListBox>
+                    <Button Grid.Row="1" Grid.Column="0" Margin="5" Width="80" Height="20" FontSize="12" HorizontalAlignment="Center">Сохранить</Button>
+                    <Button Grid.Row="1" Grid.Column="1" Margin="5" Width="80" Height="20" FontSize="12" HorizontalAlignment="Center">Загрузить</Button>
+                </Grid>
+            </GroupBox>
+            <GroupBox Header="Вставка:" Grid.Row="1">
+                <StackPanel Orientation="Vertical">
+                    <ComboBox Name="figureTypeCombobox" Grid.Row="1" Margin="26, 0, 0, 0" 
+                              SelectedIndex="1" Width="150" Height="20"
+                              ItemsSource="{Binding Source={StaticResource figureTypesEnum}}"
+                              SelectionChanged="ComboBox_SelectionChanged"/>
+
+
+                    <controls:FigurePropertiesControl x:Name="figurePropControl"/>
+                    <Button Margin="0,0,0,0" Width="160" Click="InsertButton_Click">Разместить</Button>
+                </StackPanel>
+            </GroupBox>
+        </Grid>
+        <TextBox Name="logTextBox" Grid.Row="1" Grid.ColumnSpan="2" Margin="5,5,5,5" />
+    </Grid>
+</Window>
