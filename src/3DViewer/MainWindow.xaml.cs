@@ -1,7 +1,10 @@
-﻿using _3DViewer.Primitives;
+﻿using _3DViewer.Data.Model;
+using _3DViewer.Primitives;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data.Entity.Core.EntityClient;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,6 +26,10 @@ namespace _3DViewer
     /// </summary>
     public partial class MainWindow : Window
     {
+        private _3DViewerContext _dbContext;
+        private static readonly string _dbName = "3DViewerDB1";
+        private readonly string _connStr = $"data source=ANTONK-573;initial catalog={_dbName};integrated security=True;MultipleActiveResultSets=True;App=EntityFramework;";
+
         private ModelVisual3D _modelVisual = new ModelVisual3D();
         private Model3DGroup _model3DGroup = new Model3DGroup();
 
@@ -32,7 +39,10 @@ namespace _3DViewer
 
         public MainWindow()
         {
+             _dbContext = new _3DViewerContext(_connStr);
+            
             InitializeComponent();
+            ResetDB();
             ComboBox_SelectionChanged(this, null);
             SetupLight();
             ConfigureViewPortAndModelVisual();
@@ -40,6 +50,7 @@ namespace _3DViewer
             //AddCube(new Point3D(0,0,0), 4, Colors.Black);
             //AddPyramid(new Point3D(0, 0, 0), 4, 6, Colors.Blue);
         }
+
         private void SetupLight()
         {
             var ambientLight = new AmbientLight(Colors.LightGray);
@@ -49,6 +60,30 @@ namespace _3DViewer
 
             _model3DGroup.Children.Add(directionalLight);
             _model3DGroup.Children.Add(ambientLight);
+        }
+
+        private void ResetDB() 
+        {
+            _dbContext.Database.Delete();
+
+            var types = new List<FigureType>();
+            types.Add(new FigureType { Name = "Cube" });
+            types.Add(new FigureType { Name = "Piramid" });
+            types.Add(new FigureType { Name = "Cone" });
+            types.Add(new FigureType { Name = "Cylinder" });
+            types.Add(new FigureType { Name = "Sphere" });
+            _dbContext.FigureTypes.AddRange(types);
+
+            var properties = new List<Property>();
+            properties.Add(new Property { Name = "X" });
+            properties.Add(new Property { Name = "Y" });
+            properties.Add(new Property { Name = "Z" });
+            properties.Add(new Property { Name = "Side" });
+            properties.Add(new Property { Name = "Height" });
+            properties.Add(new Property { Name = "Radius" });
+            _dbContext.Properties.AddRange(properties);
+
+            _dbContext.SaveChanges();
         }
 
         private void ConfigureViewPortAndModelVisual()
@@ -111,13 +146,13 @@ namespace _3DViewer
             _camera.LookDirection = new Vector3D(-v.X, -v.Y, -v.Z);
         }
 
-        private MeshGeometry3D GetMeshForFigure(FigureType type) 
+        private MeshGeometry3D GetMeshForFigure(FigureTypeEnum type) 
         {
             MeshGeometry3D mesh = null;
 
             switch (type) 
             {
-                case FigureType.Куб:
+                case FigureTypeEnum.Куб:
                     var cube = new Cube3D(new Point3D(figurePropControl.X,
                                                       figurePropControl.Y,
                                                       figurePropControl.Z),
@@ -125,7 +160,7 @@ namespace _3DViewer
                     mesh = cube.GetMesh();
                     break;
                 
-                case FigureType.Пирамида:
+                case FigureTypeEnum.Пирамида:
                     var pyramid = new Pyramid3D(new Point3D(figurePropControl.X,
                                                       figurePropControl.Y,
                                                       figurePropControl.Z),
@@ -143,8 +178,8 @@ namespace _3DViewer
             var cb = sender as ComboBox;
             var item = figureTypeCombobox.SelectedItem;
 
-            FigureType ft = FigureType.Конус;
-            var res =(FigureType)TypeDescriptor.GetConverter(ft).ConvertFrom(item.ToString());
+            FigureTypeEnum ft = FigureTypeEnum.Конус;
+            var res =(FigureTypeEnum)TypeDescriptor.GetConverter(ft).ConvertFrom(item.ToString());
 
             if (figurePropControl != null)
                 figurePropControl.Update(res);
@@ -221,9 +256,9 @@ namespace _3DViewer
 
         private void InsertButton_Click(object sender, RoutedEventArgs e)
         {
-            FigureType ft = FigureType.Конус;
+            FigureTypeEnum ft = FigureTypeEnum.Конус;
             var item = figureTypeCombobox.SelectedItem;
-            var type = (FigureType)TypeDescriptor.GetConverter(ft).ConvertFrom(item.ToString());
+            var type = (FigureTypeEnum)TypeDescriptor.GetConverter(ft).ConvertFrom(item.ToString());
             
             var mesh = GetMeshForFigure(type);
             var geometryModel = new GeometryModel3D();
@@ -233,6 +268,12 @@ namespace _3DViewer
             geometryModel.Material = material;
 
             _model3DGroup.Children.Add(geometryModel);
+        }
+
+        private void Window_Unloaded(object sender, RoutedEventArgs e)
+        {
+            if (_dbContext != null)
+                _dbContext.Dispose();
         }
     }
 }

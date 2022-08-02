@@ -42,6 +42,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
@@ -54,8 +55,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Model\3DViewerContext.cs" />
+    <Compile Include="Model\3DViewerContextPart.cs" />
+    <Compile Include="Model\Figure.cs" />
+    <Compile Include="Model\FigureProperty.cs" />
     <Compile Include="Model\FigureType.cs" />
     <Compile Include="Model\Property.cs" />
+    <Compile Include="Model\PropertyValue.cs" />
+    <Compile Include="Model\Scene.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

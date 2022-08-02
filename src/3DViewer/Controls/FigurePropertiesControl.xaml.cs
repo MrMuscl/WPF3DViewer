@@ -76,7 +76,7 @@ namespace _3DViewer.Controls
             }
         }
 
-        public void Update(FigureType type) 
+        public void Update(FigureTypeEnum type) 
         {
             sideTextbox.IsEnabled = false;
             sideLabel.IsEnabled = false;
@@ -86,12 +86,12 @@ namespace _3DViewer.Controls
             radiusLabel.IsEnabled = false;
 
 
-            if (type == FigureType.Куб)
+            if (type == FigureTypeEnum.Куб)
             {
                 sideTextbox.IsEnabled = true;
                 sideLabel.IsEnabled = true;
             }
-            else if (type == FigureType.Цилиндр|| type == FigureType.Конус)
+            else if (type == FigureTypeEnum.Цилиндр|| type == FigureTypeEnum.Конус)
             {
                 radiusTextbox.IsEnabled = true;
                 radiusLabel.IsEnabled = true;
@@ -99,12 +99,12 @@ namespace _3DViewer.Controls
                 heightTextbox.IsEnabled = true;
                 heightLabel.IsEnabled = true;
             }
-            else if (type == FigureType.Сфера) 
+            else if (type == FigureTypeEnum.Сфера) 
             {
                 radiusTextbox.IsEnabled = true;
                 radiusLabel.IsEnabled = true;
             }
-            else if (type == FigureType.Пирамида)
+            else if (type == FigureTypeEnum.Пирамида)
             {
                 sideTextbox.IsEnabled = true;
                 sideLabel.IsEnabled = true;

@@ -7,7 +7,7 @@ using System.Windows.Media.Media3D;
 
 namespace _3DViewer.Primitives
 {
-    public enum FigureType
+    public enum FigureTypeEnum
     {
         Куб,
         Пирамида,
@@ -15,6 +15,7 @@ namespace _3DViewer.Primitives
         Цилиндр,
         Сфера
     }
+
     public abstract class Figure3D
     {
         public double X { get; set; }
