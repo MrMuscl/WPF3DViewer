@@ -63,8 +63,8 @@
                         <ListBoxItem>Scene3</ListBoxItem>
                         <ListBoxItem>Scene4</ListBoxItem>
                     </ListBox>
-                    <Button Grid.Row="1" Grid.Column="0" Margin="5" Width="80" Height="20" FontSize="12" HorizontalAlignment="Center">Сохранить</Button>
-                    <Button Grid.Row="1" Grid.Column="1" Margin="5" Width="80" Height="20" FontSize="12" HorizontalAlignment="Center">Загрузить</Button>
+                    <Button Grid.Row="1" Grid.Column="0" Margin="5" Width="80" Height="20" FontSize="12" HorizontalAlignment="Center" Click="ButtonSave_Click">Сохранить</Button>
+                    <Button Grid.Row="1" Grid.Column="1" Margin="5" Width="80" Height="20" FontSize="12" HorizontalAlignment="Center" Click="ButtonLoad_Click">Загрузить</Button>
                 </Grid>
             </GroupBox>
             <GroupBox Header="Вставка:" Grid.Row="1">

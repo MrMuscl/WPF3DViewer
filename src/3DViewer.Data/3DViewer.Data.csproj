@@ -56,9 +56,10 @@
   <ItemGroup>
     <Compile Include="Model\3DViewerContext.cs" />
     <Compile Include="Model\3DViewerContextPart.cs" />
-    <Compile Include="Model\Figure.cs" />
+    <Compile Include="Model\FigurePropertiesSet.cs" />
     <Compile Include="Model\FigureProperty.cs" />
     <Compile Include="Model\FigureType.cs" />
+    <Compile Include="Model\Object3D.cs" />
     <Compile Include="Model\Property.cs" />
     <Compile Include="Model\PropertyValue.cs" />
     <Compile Include="Model\Scene.cs" />

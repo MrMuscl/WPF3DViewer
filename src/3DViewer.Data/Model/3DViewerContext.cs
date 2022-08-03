@@ -14,12 +14,12 @@ namespace _3DViewer.Data.Model
         {
         }
 
-        public virtual DbSet<Figure> Figures { get; set; }
+        public virtual DbSet<FigurePropertiesSet> FigurePropertiesSets { get; set; }
         public virtual DbSet<FigureProperty> FigureProperties { get; set; }
         public virtual DbSet<FigureType> FigureTypes { get; set; }
+        public virtual DbSet<Object3D> Object3Ds { get; set; }
         public virtual DbSet<Property> Properties { get; set; }
         public virtual DbSet<PropertyValue> PropertyValues { get; set; }
         public virtual DbSet<Scene> Scenes { get; set; }
-
     }
 }

@@ -11,13 +11,13 @@ namespace _3DViewer.Data.Model
         public FigureType()
         {
             FigureProperties = new HashSet<FigureProperty>();
-            Figures = new HashSet<Figure>();
+            Object3Ds = new HashSet<Object3D>();
         }
 
         public int Id { get; set; }
         public string Name { get; set; }
 
         public virtual ICollection<FigureProperty> FigureProperties { get; set; }
-        public virtual ICollection<Figure> Figures { get; set; }
+        public virtual ICollection<Object3D> Object3Ds { get; set; }
     }
 }

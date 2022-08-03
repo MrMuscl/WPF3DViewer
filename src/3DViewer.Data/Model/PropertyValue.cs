@@ -10,7 +10,7 @@ namespace _3DViewer.Data.Model
     {
         public PropertyValue()
         {
-            Figures = new HashSet<Figure>();
+            FigurePropertiesSets = new HashSet<FigurePropertiesSet>();
         }
 
         public int Id { get; set; }
@@ -18,6 +18,6 @@ namespace _3DViewer.Data.Model
         public string Value { get; set; }
 
         public virtual Property Property { get; set; }
-        public virtual ICollection<Figure> Figures { get; set; }
+        public virtual ICollection<FigurePropertiesSet> FigurePropertiesSets { get; set; }
     }
 }

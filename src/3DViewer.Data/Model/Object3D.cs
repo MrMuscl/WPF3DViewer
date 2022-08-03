@@ -6,19 +6,19 @@ using System.Threading.Tasks;
 
 namespace _3DViewer.Data.Model
 {
-    public class Figure
+    public class Object3D
     {
-        public Figure()
+        public Object3D()
         {
-            Scenes = new HashSet<Scene>();
+            FigurePropertiesSets = new HashSet<FigurePropertiesSet>();
         }
 
         public int Id { get; set; }
         public int FigureTypeId { get; set; }
-        public int PropertyValueId { get; set; }
+        public int SceneId { get; set; }
 
         public virtual FigureType FigureType { get; set; }
-        public virtual PropertyValue PropertyValue { get; set; }
-        public virtual ICollection<Scene> Scenes { get; set; }
+        public virtual Scene Scene { get; set; }
+        public virtual ICollection<FigurePropertiesSet> FigurePropertiesSets { get; set; }
     }
 }
