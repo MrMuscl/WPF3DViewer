@@ -27,7 +27,7 @@ namespace _3DViewer
     public partial class MainWindow : Window
     {
         private _3DViewerContext _dbContext;
-        private static readonly string _dbName = "_3DViewerDB_new";
+        private static readonly string _dbName = "_3DViewerDB_new4";
         private readonly string _connStr = $"data source=ANTONK-573;initial catalog={_dbName};integrated security=True;MultipleActiveResultSets=True;App=EntityFramework;";
 
         private ModelVisual3D _modelVisual = new ModelVisual3D();
@@ -48,9 +48,6 @@ namespace _3DViewer
             ComboBox_SelectionChanged(this, null);
             SetupLight();
             ConfigureViewPortAndModelVisual();
-
-            //AddCube(new Point3D(0,0,0), 4, Colors.Black);
-            //AddPyramid(new Point3D(0, 0, 0), 4, 6, Colors.Blue);
         }
 
         private void SetupLight()
@@ -68,6 +65,7 @@ namespace _3DViewer
         {
             _dbContext.Database.Delete();
 
+            // Cerate primitives types
             var types = new List<FigureType>();
             types.Add(new FigureType { Name = "Cube" });
             types.Add(new FigureType { Name = "Piramid" });
@@ -76,6 +74,7 @@ namespace _3DViewer
             types.Add(new FigureType { Name = "Sphere" });
             _dbContext.FigureTypes.AddRange(types);
 
+            // Create primitives properties
             var properties = new List<Property>();
             properties.Add(new Property { Name = "X" });
             properties.Add(new Property { Name = "Y" });
@@ -85,15 +84,42 @@ namespace _3DViewer
             properties.Add(new Property { Name = "Radius" });
             _dbContext.Properties.AddRange(properties);
             _dbContext.SaveChanges();
-
+                        
+            // Add corresponding property to each primitive type
             var cube = _dbContext.FigureTypes.Where(t => t.Name == "Cube").SingleOrDefault();
-            var props = new List<Property>();
-            props.Add(_dbContext.Properties.Where(p => p.Name == "X").SingleOrDefault());
-            props.Add(_dbContext.Properties.Where(p => p.Name == "Y").SingleOrDefault());
-            props.Add(_dbContext.Properties.Where(p => p.Name == "Z").SingleOrDefault());
-            props.Add(_dbContext.Properties.Where(p => p.Name == "Side").SingleOrDefault());
-            //cube.FigureProperties.
+            cube.Properties.Add(_dbContext.Properties.Where(p => p.Name == "X").SingleOrDefault());
+            cube.Properties.Add(_dbContext.Properties.Where(p => p.Name == "Y").SingleOrDefault());
+            cube.Properties.Add(_dbContext.Properties.Where(p => p.Name == "Z").SingleOrDefault());
+            cube.Properties.Add(_dbContext.Properties.Where(p => p.Name == "Side").SingleOrDefault());
 
+            var pyramid = _dbContext.FigureTypes.Where(t => t.Name == "Pyramid").SingleOrDefault();
+            pyramid.Properties.Add(_dbContext.Properties.Where(p => p.Name == "X").SingleOrDefault());
+            pyramid.Properties.Add(_dbContext.Properties.Where(p => p.Name == "Y").SingleOrDefault());
+            pyramid.Properties.Add(_dbContext.Properties.Where(p => p.Name == "Z").SingleOrDefault());
+            pyramid.Properties.Add(_dbContext.Properties.Where(p => p.Name == "Side").SingleOrDefault());
+            pyramid.Properties.Add(_dbContext.Properties.Where(p => p.Name == "Height").SingleOrDefault());
+
+            var cone = _dbContext.FigureTypes.Where(t => t.Name == "Cone").SingleOrDefault();
+            cone.Properties.Add(_dbContext.Properties.Where(p => p.Name == "X").SingleOrDefault());
+            cone.Properties.Add(_dbContext.Properties.Where(p => p.Name == "Y").SingleOrDefault());
+            cone.Properties.Add(_dbContext.Properties.Where(p => p.Name == "Z").SingleOrDefault());
+            cone.Properties.Add(_dbContext.Properties.Where(p => p.Name == "Radius").SingleOrDefault());
+            cone.Properties.Add(_dbContext.Properties.Where(p => p.Name == "Height").SingleOrDefault());
+
+            var cylinder = _dbContext.FigureTypes.Where(t => t.Name == "Sylinder").SingleOrDefault();
+            cylinder.Properties.Add(_dbContext.Properties.Where(p => p.Name == "X").SingleOrDefault());
+            cylinder.Properties.Add(_dbContext.Properties.Where(p => p.Name == "Y").SingleOrDefault());
+            cylinder.Properties.Add(_dbContext.Properties.Where(p => p.Name == "Z").SingleOrDefault());
+            cylinder.Properties.Add(_dbContext.Properties.Where(p => p.Name == "Radius").SingleOrDefault());
+            cylinder.Properties.Add(_dbContext.Properties.Where(p => p.Name == "Height").SingleOrDefault());
+
+            var sphere = _dbContext.FigureTypes.Where(t => t.Name == "Sylinder").SingleOrDefault();
+            sphere.Properties.Add(_dbContext.Properties.Where(p => p.Name == "X").SingleOrDefault());
+            sphere.Properties.Add(_dbContext.Properties.Where(p => p.Name == "Y").SingleOrDefault());
+            sphere.Properties.Add(_dbContext.Properties.Where(p => p.Name == "Z").SingleOrDefault());
+            sphere.Properties.Add(_dbContext.Properties.Where(p => p.Name == "Radius").SingleOrDefault());
+
+            _dbContext.SaveChanges();
         }
 
         private void ConfigureViewPortAndModelVisual()
