@@ -52,19 +52,25 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="6*"/>
                         <RowDefinition/>
+                        <RowDefinition/>
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <ListBox Grid.Row="0" Grid.ColumnSpan="2" Name="sceneList" Margin="5, 2, 5, 2">
-                        <ListBoxItem>Scene1</ListBoxItem>
-                        <ListBoxItem>Scene2</ListBoxItem>
-                        <ListBoxItem>Scene3</ListBoxItem>
-                        <ListBoxItem>Scene4</ListBoxItem>
+                    <ListBox Grid.Row="0" Grid.ColumnSpan="2" Name="sceneList" Margin="5, 2, 5, 2" ItemsSource="{Binding Scenes}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Name}" />
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>                        
                     </ListBox>
-                    <Button Grid.Row="1" Grid.Column="0" Margin="5" Width="80" Height="20" FontSize="12" HorizontalAlignment="Center" Click="ButtonSave_Click">Сохранить</Button>
-                    <Button Grid.Row="1" Grid.Column="1" Margin="5" Width="80" Height="20" FontSize="12" HorizontalAlignment="Center" Click="ButtonLoad_Click">Загрузить</Button>
+                    <StackPanel Grid.Row="1" Grid.ColumnSpan="2" Orientation="Horizontal">
+                        <Label Content="Имя:" Margin="2"/>
+                        <TextBox Name="sceneNameTextbox" Margin="2,2,2,2" HorizontalAlignment="Left" Width="120" Height="20"/>
+                    </StackPanel>
+                    <Button Grid.Row="2" Grid.Column="0" Margin="5" Width="80" Height="20" FontSize="12" HorizontalAlignment="Center" Click="ButtonSave_Click">Сохранить</Button>
+                    <Button Grid.Row="3" Grid.Column="1" Margin="5" Width="80" Height="20" FontSize="12" HorizontalAlignment="Center" Click="ButtonLoad_Click">Загрузить</Button>
                 </Grid>
             </GroupBox>
             <GroupBox Header="Вставка:" Grid.Row="1">

@@ -8,16 +8,11 @@ namespace _3DViewer.Data.Model
 {
     public class PropertyValue
     {
-        public PropertyValue()
-        {
-            FigurePropertiesSets = new HashSet<FigurePropertiesSet>();
-        }
-
         public int Id { get; set; }
         public int PropertyId { get; set; }
         public string Value { get; set; }
 
         public virtual Property Property { get; set; }
-        public virtual ICollection<FigurePropertiesSet> FigurePropertiesSets { get; set; }
+        public virtual Object3D Object3D { get; set; }
     }
 }

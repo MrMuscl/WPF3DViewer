@@ -1,4 +1,5 @@
-﻿using System;
+﻿using _3DViewer.Data.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,10 +11,10 @@ namespace _3DViewer.Primitives
 {
     class Cube3D : Figure3D
     {
-        private double _side = 0;
-        public Cube3D(Point3D insPoint, double side) : base(insPoint)
+        public double Side { get; set; }
+        public Cube3D(Point3D insPoint, double side, _3DViewerContext context) : base(insPoint, context)
         {
-            _side = side;
+            Side = side;
         }
         public override MeshGeometry3D GetMesh()
         {
@@ -35,18 +36,9 @@ namespace _3DViewer.Primitives
             normalCollection.Add(new Vector3D(0, 0, 1));
             mesh.Normals = normalCollection;
 
-            double o = _side / 2;
+            double o = Side / 2;
 
             var points = new Point3DCollection();
-            //points.Add(new Point3D(-o + X, -o + Y, o + Z));
-            //points.Add(new Point3D(o + X, -o + Y, o + Z));
-            //points.Add(new Point3D(-o + X, o + Y, o + Z));
-            //points.Add(new Point3D(o + X, o + Y, o + Z));
-            //points.Add(new Point3D(-o + X, -o + Y, -o + Z));
-            //points.Add(new Point3D(o + X, -o + Y, -o + Z));
-            //points.Add(new Point3D(-o + X, o + Y, -o + Z));
-            //points.Add(new Point3D(o + X, o + Y, -o + Z));
-
             points.Add(new Point3D(-o + X, -o + Y, 0 + Z));
             points.Add(new Point3D(o + X, -o + Y, 0 + Z));
             points.Add(new Point3D(-o + X, o + Y, 0 + Z));
@@ -81,6 +73,46 @@ namespace _3DViewer.Primitives
             mesh.TriangleIndices = triangleIdx;
 
             return mesh;
+        }
+
+        public override void SaveToScene(Scene scene)
+        {
+            var obj = new Object3D();
+
+            var props = new List<PropertyValue>();
+            var propX = new PropertyValue
+            {
+                Property = _dbContext.Properties.Where(p => p.Name == "X").SingleOrDefault(),
+                Value = this.X.ToString()
+            };
+            props.Add(propX);
+
+            var propY = new PropertyValue
+            {
+                Property = _dbContext.Properties.Where(p => p.Name == "Y").SingleOrDefault(),
+                Value = this.Y.ToString()
+            };
+            props.Add(propY);
+
+            var propZ = new PropertyValue
+            {
+                Property = _dbContext.Properties.Where(p => p.Name == "Z").SingleOrDefault(),
+                Value = this.Z.ToString()
+            };
+            props.Add(propZ);
+
+            var propSide = new PropertyValue
+            {
+                Property = _dbContext.Properties.Where(p => p.Name == "Side").SingleOrDefault(),
+                Value = this.Side.ToString()
+            };
+            props.Add(propSide);
+
+            obj.FigureType = _dbContext.FigureTypes.Where(t => t.Name == "Cube").SingleOrDefault();
+            foreach (var p in props)
+                obj.PropertyValues.Add(p);
+
+            scene.Object3Ds.Add(obj);
         }
     }
 }

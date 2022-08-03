@@ -27,7 +27,7 @@ namespace _3DViewer
     public partial class MainWindow : Window
     {
         private _3DViewerContext _dbContext;
-        private static readonly string _dbName = "_3DViewerDB_new4";
+        private static readonly string _dbName = "_3DViewerDB_new8";
         private readonly string _connStr = $"data source=ANTONK-573;initial catalog={_dbName};integrated security=True;MultipleActiveResultSets=True;App=EntityFramework;";
 
         private ModelVisual3D _modelVisual = new ModelVisual3D();
@@ -39,16 +39,20 @@ namespace _3DViewer
 
         private List<Figure3D> _figures = new List<Figure3D>();
 
+        public IEnumerable<Scene> Scenes { get { return _dbContext.Scenes.ToList(); } }
+
         public MainWindow()
         {
              _dbContext = new _3DViewerContext(_connStr);
             
             InitializeComponent();
-            ResetDB();
+            DataContext = this;
+            //ResetDB();
             ComboBox_SelectionChanged(this, null);
             SetupLight();
             ConfigureViewPortAndModelVisual();
         }
+
 
         private void SetupLight()
         {
@@ -68,7 +72,7 @@ namespace _3DViewer
             // Cerate primitives types
             var types = new List<FigureType>();
             types.Add(new FigureType { Name = "Cube" });
-            types.Add(new FigureType { Name = "Piramid" });
+            types.Add(new FigureType { Name = "Pyramid" });
             types.Add(new FigureType { Name = "Cone" });
             types.Add(new FigureType { Name = "Cylinder" });
             types.Add(new FigureType { Name = "Sphere" });
@@ -106,20 +110,26 @@ namespace _3DViewer
             cone.Properties.Add(_dbContext.Properties.Where(p => p.Name == "Radius").SingleOrDefault());
             cone.Properties.Add(_dbContext.Properties.Where(p => p.Name == "Height").SingleOrDefault());
 
-            var cylinder = _dbContext.FigureTypes.Where(t => t.Name == "Sylinder").SingleOrDefault();
+            var cylinder = _dbContext.FigureTypes.Where(t => t.Name == "Cylinder").SingleOrDefault();
             cylinder.Properties.Add(_dbContext.Properties.Where(p => p.Name == "X").SingleOrDefault());
             cylinder.Properties.Add(_dbContext.Properties.Where(p => p.Name == "Y").SingleOrDefault());
             cylinder.Properties.Add(_dbContext.Properties.Where(p => p.Name == "Z").SingleOrDefault());
             cylinder.Properties.Add(_dbContext.Properties.Where(p => p.Name == "Radius").SingleOrDefault());
             cylinder.Properties.Add(_dbContext.Properties.Where(p => p.Name == "Height").SingleOrDefault());
 
-            var sphere = _dbContext.FigureTypes.Where(t => t.Name == "Sylinder").SingleOrDefault();
+            var sphere = _dbContext.FigureTypes.Where(t => t.Name == "Cylinder").SingleOrDefault();
             sphere.Properties.Add(_dbContext.Properties.Where(p => p.Name == "X").SingleOrDefault());
             sphere.Properties.Add(_dbContext.Properties.Where(p => p.Name == "Y").SingleOrDefault());
             sphere.Properties.Add(_dbContext.Properties.Where(p => p.Name == "Z").SingleOrDefault());
             sphere.Properties.Add(_dbContext.Properties.Where(p => p.Name == "Radius").SingleOrDefault());
 
             _dbContext.SaveChanges();
+
+            
+            
+            
+                
+                //scene.Object3Ds.Add
         }
 
         private void ConfigureViewPortAndModelVisual()
@@ -135,7 +145,7 @@ namespace _3DViewer
         private void AddCube(Point3D pt, double size, Color color)
         {
             var geometryModel = new GeometryModel3D();
-            var box = new Cube3D(pt, size);
+            var box = new Cube3D(pt, size, _dbContext);
 
             var mesh = box.GetMesh();
             geometryModel.Geometry = mesh;
@@ -149,7 +159,7 @@ namespace _3DViewer
         private void AddPyramid(Point3D pt, double size, double height, Color color)
         {
             var geometryModel = new GeometryModel3D();
-            var pyramid = new Pyramid3D(pt, size, height);
+            var pyramid = new Pyramid3D(pt, size, height, _dbContext);
 
             var mesh = pyramid.GetMesh();
             geometryModel.Geometry = mesh;
@@ -195,7 +205,8 @@ namespace _3DViewer
                     figure = new Cube3D(new Point3D(figurePropControl.X,
                                                       figurePropControl.Y,
                                                       figurePropControl.Z),
-                                                      figurePropControl.Side);
+                                                      figurePropControl.Side,
+                                                      _dbContext);
                     break;
 
                 case FigureTypeEnum.Пирамида:
@@ -203,42 +214,12 @@ namespace _3DViewer
                                                       figurePropControl.Y,
                                                       figurePropControl.Z),
                                                       figurePropControl.Side,
-                                                      figurePropControl.Heihgt);
+                                                      figurePropControl.Heihgt,
+                                                      _dbContext);
                     break;
             }
 
             return figure;
-        }
-
-        private MeshGeometry3D GetMeshForFigure() 
-        {
-            FigureTypeEnum ft = FigureTypeEnum.Конус;
-            var item = figureTypeCombobox.SelectedItem;
-            var type = (FigureTypeEnum)TypeDescriptor.GetConverter(ft).ConvertFrom(item.ToString());
-            
-            MeshGeometry3D mesh = null;
-
-            switch (type) 
-            {
-                case FigureTypeEnum.Куб:
-                    var cube = new Cube3D(new Point3D(figurePropControl.X,
-                                                      figurePropControl.Y,
-                                                      figurePropControl.Z),
-                                                      figurePropControl.Side);
-                    mesh = cube.GetMesh();
-                    break;
-                
-                case FigureTypeEnum.Пирамида:
-                    var pyramid = new Pyramid3D(new Point3D(figurePropControl.X,
-                                                      figurePropControl.Y,
-                                                      figurePropControl.Z),
-                                                      figurePropControl.Side,
-                                                      figurePropControl.Heihgt);
-                    mesh = pyramid.GetMesh();
-                    break;
-            }
-
-            return mesh;
         }
 
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -325,8 +306,12 @@ namespace _3DViewer
         private void InsertButton_Click(object sender, RoutedEventArgs e)
         {
             Figure3D figure = CreateFigureFromUserInput();
-            
-            var mesh = GetMeshForFigure();
+            PlaceFigureOnScene(figure);
+        }
+
+        private void PlaceFigureOnScene(Figure3D figure) 
+        {
+            var mesh = figure.GetMesh();
             var geometryModel = new GeometryModel3D();
             geometryModel.Geometry = mesh;
 
@@ -345,37 +330,72 @@ namespace _3DViewer
 
         private void ButtonSave_Click(object sender, RoutedEventArgs e)
         {
+            if (string.IsNullOrEmpty(sceneNameTextbox.Text)) 
+            {
+                MessageBox.Show("Имя сцены пустое. Пожалуйсте, укажите имя.");
+                return;
+            }
+            var scene = new Scene {Name= sceneNameTextbox.Text };
             foreach (var figure in _figures) 
             {
-                string str = "";
-                if (figure is Cube3D)
-                {
-                    str = "It is cube";
-                }
-                else if (figure is Pyramid3D) 
-                {
-                    str = "It is pyramide";
-                }
-                
-                
-                //switch (figure.GetType()) 
-                //{
-                //    case typeof(Cube3D):
-                //        break;
-                //    case typeof(Pyramid3D):
-                //        break;
-                //    default:
-                //        break;
-                //}
+                figure.SaveToScene(scene);
             }
+            _dbContext.Scenes.Add(scene);
+            _dbContext.SaveChanges();
+
+            MessageBox.Show($"Сцена {sceneNameTextbox.Text} сохранена в базу данных.");
+            sceneNameTextbox.Text = "";
+            sceneList.ItemsSource = Scenes;
         }
 
         private void ButtonLoad_Click(object sender, RoutedEventArgs e)
         {
-            _model3DGroup.Children.Clear();
-            _model3DGroup.Children = new Model3DCollection();
+            try
+            {
+                var sceneName = ((Scene)sceneList.SelectedItem).Name;
+                var scene = _dbContext.Scenes.Where(s => s.Name == sceneName).FirstOrDefault();
+                if (scene == null)
+                {
+                    MessageBox.Show($"Невозможно найти сцену {sceneName} в базе данных.");
+                    return;
+                }
 
-            SetupLight();
+                _model3DGroup.Children.Clear();
+                _model3DGroup.Children = new Model3DCollection();
+                SetupLight();
+
+                foreach (var obj in scene.Object3Ds)
+                {
+                    var type = obj.FigureType.Name;
+                    switch (type)
+                    {
+                        case "Cube":
+                            var valueX = double.Parse(obj.PropertyValues.Where(p => p.Property.Name == "X").SingleOrDefault()?.Value);
+                            var valueY = double.Parse(obj.PropertyValues.Where(p => p.Property.Name == "Y").SingleOrDefault()?.Value);
+                            var valueZ = double.Parse(obj.PropertyValues.Where(p => p.Property.Name == "Z").SingleOrDefault()?.Value);
+                            var valueSide = double.Parse( obj.PropertyValues.Where(p => p.Property.Name == "Side").SingleOrDefault()?.Value);
+                            var cube = new Cube3D(new Point3D (valueX, valueY, valueZ), valueSide, _dbContext);
+                            
+                            PlaceFigureOnScene(cube);
+                            break;
+
+                        case "Pyramid":
+                            valueX = double.Parse(obj.PropertyValues.Where(p => p.Property.Name == "X").SingleOrDefault()?.Value);
+                            valueY = double.Parse(obj.PropertyValues.Where(p => p.Property.Name == "Y").SingleOrDefault()?.Value);
+                            valueZ = double.Parse(obj.PropertyValues.Where(p => p.Property.Name == "Z").SingleOrDefault()?.Value);
+                            valueSide = double.Parse(obj.PropertyValues.Where(p => p.Property.Name == "Side").SingleOrDefault()?.Value);
+                            var valueHeight = double.Parse(obj.PropertyValues.Where(p => p.Property.Name == "Height").SingleOrDefault()?.Value);
+                            var pyramide = new Pyramid3D(new Point3D(valueX, valueY, valueZ), valueSide, valueHeight, _dbContext);
+                            
+                            PlaceFigureOnScene(pyramide);
+                            break;
+                    }
+                }
+            }
+            catch (Exception ex) 
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using _3DViewer.Data.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,12 +23,17 @@ namespace _3DViewer.Primitives
         public double Y { get; set; }
         public double Z { get; set; }
 
-        public Figure3D(Point3D insPoint)
+        protected _3DViewerContext _dbContext;
+
+        public Figure3D(Point3D insPoint, _3DViewerContext dbContext)
         {
             X = insPoint.X; Y = insPoint.Y; Z = insPoint.Z;
+            _dbContext = dbContext;
         }
 
         public abstract MeshGeometry3D GetMesh();
+
+        public abstract void SaveToScene(Scene scene);
 
     }
 }
