@@ -208,13 +208,27 @@ namespace _3DViewer
                                                       figurePropControl.Side,
                                                       _dbContext);
                     break;
-
                 case FigureTypeEnum.Пирамида:
                     figure = new Pyramid3D(new Point3D(figurePropControl.X,
                                                       figurePropControl.Y,
                                                       figurePropControl.Z),
                                                       figurePropControl.Side,
                                                       figurePropControl.Heihgt,
+                                                      _dbContext);
+                    break;
+                case FigureTypeEnum.Цилиндр:
+                    figure = new Cylinder3D(new Point3D(figurePropControl.X,
+                                                      figurePropControl.Y,
+                                                      figurePropControl.Z),
+                                                      figurePropControl.Height,
+                                                      figurePropControl.Radius,
+                                                      _dbContext);                    
+                    break;
+                case FigureTypeEnum.Сфера:
+                    figure = new Sphere3D(new Point3D(figurePropControl.X,
+                                                      figurePropControl.Y,
+                                                      figurePropControl.Z),
+                                                      figurePropControl.Radius,
                                                       _dbContext);
                     break;
             }

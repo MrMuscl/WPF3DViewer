@@ -83,8 +83,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Primitives\Cube3D.cs" />
+    <Compile Include="Primitives\Cylinder3D.cs" />
     <Compile Include="Primitives\Figure3D.cs" />
     <Compile Include="Primitives\Pyramid3D.cs" />
+    <Compile Include="Primitives\Sphere3D.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
