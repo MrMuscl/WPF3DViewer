@@ -387,6 +387,27 @@ namespace _3DViewer
                             
                             PlaceFigureOnScene(pyramide);
                             break;
+                        
+                        case "Cylinder":
+                            valueX = double.Parse(obj.PropertyValues.Where(p => p.Property.Name == "X").SingleOrDefault()?.Value);
+                            valueY = double.Parse(obj.PropertyValues.Where(p => p.Property.Name == "Y").SingleOrDefault()?.Value);
+                            valueZ = double.Parse(obj.PropertyValues.Where(p => p.Property.Name == "Z").SingleOrDefault()?.Value);
+                            valueHeight = double.Parse(obj.PropertyValues.Where(p => p.Property.Name == "Height").SingleOrDefault()?.Value);
+                            var valueRadius = double.Parse(obj.PropertyValues.Where(p => p.Property.Name == "Radius").SingleOrDefault()?.Value);
+                            var cylinder = new Cylinder3D(new Point3D(valueX, valueY, valueZ), valueHeight, valueRadius, _dbContext);
+
+                            PlaceFigureOnScene(cylinder);
+                            break;
+                        
+                        case "Sphere":
+                            valueX = double.Parse(obj.PropertyValues.Where(p => p.Property.Name == "X").SingleOrDefault()?.Value);
+                            valueY = double.Parse(obj.PropertyValues.Where(p => p.Property.Name == "Y").SingleOrDefault()?.Value);
+                            valueZ = double.Parse(obj.PropertyValues.Where(p => p.Property.Name == "Z").SingleOrDefault()?.Value);
+                            valueRadius = double.Parse(obj.PropertyValues.Where(p => p.Property.Name == "Radius").SingleOrDefault()?.Value);
+                            var sphere = new Sphere3D(new Point3D(valueX, valueY, valueZ), valueRadius, _dbContext);
+
+                            PlaceFigureOnScene(sphere);
+                            break;
                     }
                 }
             }
