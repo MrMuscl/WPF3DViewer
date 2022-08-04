@@ -10,7 +10,7 @@ namespace _3DViewer.Data.Model
     public partial class _3DViewerContext : DbContext
     {
         public _3DViewerContext()
-            : base("name=junkConnectionStr")
+            : base("name=DBConnectionString")
         {
         }
 

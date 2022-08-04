@@ -82,6 +82,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Primitives\Cone3D.cs" />
     <Compile Include="Primitives\Cube3D.cs" />
     <Compile Include="Primitives\Cylinder3D.cs" />
     <Compile Include="Primitives\Figure3D.cs" />
@@ -110,7 +111,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\3DViewer.Data\3DViewer.Data.csproj">

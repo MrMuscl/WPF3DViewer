@@ -27,9 +27,6 @@ namespace _3DViewer
     public partial class MainWindow : Window
     {
         private _3DViewerContext _dbContext;
-        private static readonly string _dbName = "_3DViewerDB_new8";
-        private readonly string _connStr = $"data source=ANTONK-573;initial catalog={_dbName};integrated security=True;MultipleActiveResultSets=True;App=EntityFramework;";
-
         private ModelVisual3D _modelVisual = new ModelVisual3D();
         private Model3DGroup _model3DGroup = new Model3DGroup();
 
@@ -43,11 +40,12 @@ namespace _3DViewer
 
         public MainWindow()
         {
-             _dbContext = new _3DViewerContext(_connStr);
-            
+            _dbContext = new _3DViewerContext();
+            if (!_dbContext.Database.Exists())
+                ResetDB();
+
             InitializeComponent();
             DataContext = this;
-            //ResetDB();
             ComboBox_SelectionChanged(this, null);
             SetupLight();
             ConfigureViewPortAndModelVisual();
@@ -220,6 +218,14 @@ namespace _3DViewer
                                                       figurePropControl.Radius,
                                                       _dbContext);
                     break;
+                case FigureTypeEnum.Конус:
+                    figure = new Cone3D(new Point3D(figurePropControl.X,
+                                                      figurePropControl.Y,
+                                                      figurePropControl.Z),
+                                                      figurePropControl.Radius,
+                                                      figurePropControl.Elevation,
+                                                      _dbContext);
+                    break;
             }
 
             return figure;
@@ -350,6 +356,12 @@ namespace _3DViewer
 
         private void ButtonLoad_Click(object sender, RoutedEventArgs e)
         {
+            if (sceneList.SelectedItem == null) 
+            {
+                MessageBox.Show("Пожалуйста, выберете сцену из списка.");
+                return;
+            }
+
             try
             {
                 var sceneName = ((Scene)sceneList.SelectedItem).Name;
@@ -407,6 +419,17 @@ namespace _3DViewer
                             var sphere = new Sphere3D(new Point3D(valueX, valueY, valueZ), valueRadius, _dbContext);
 
                             PlaceFigureOnScene(sphere);
+                            break;
+                        
+                        case "Cone":
+                            valueX = double.Parse(obj.PropertyValues.Where(p => p.Property.Name == "X").SingleOrDefault()?.Value);
+                            valueY = double.Parse(obj.PropertyValues.Where(p => p.Property.Name == "Y").SingleOrDefault()?.Value);
+                            valueZ = double.Parse(obj.PropertyValues.Where(p => p.Property.Name == "Z").SingleOrDefault()?.Value);
+                            valueHeight = double.Parse(obj.PropertyValues.Where(p => p.Property.Name == "Height").SingleOrDefault()?.Value);
+                            valueRadius = double.Parse(obj.PropertyValues.Where(p => p.Property.Name == "Radius").SingleOrDefault()?.Value);
+                            var cone = new Cone3D(new Point3D(valueX, valueY, valueZ), valueRadius, valueHeight, _dbContext);
+
+                            PlaceFigureOnScene(cone);
                             break;
                     }
                 }

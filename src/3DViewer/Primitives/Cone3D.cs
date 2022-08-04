@@ -8,19 +8,26 @@ using System.Windows.Media.Media3D;
 
 namespace _3DViewer.Primitives
 {
-    public class Cylinder3D : Figure3D
+    public class Cone3D : Figure3D
     {
         public double Radius { get; set; }
         public double Height { get; set; }
-        public Cylinder3D(Point3D insPoint, double height, double radius, _3DViewerContext context) : base(insPoint, context)
+
+        public Cone3D(Point3D insPoint,
+                      double radius,
+                      double height,
+                      _3DViewerContext context)
+            : base(insPoint, context)
         {
-            Height = height;
             Radius = radius;
+            Height = height;
         }
+
         public override MeshGeometry3D GetMesh()
         {
             var mesh = new MeshGeometry3D();
-            BuildCylinderMesh(mesh, new Point3D(X, Y, Z), new Vector3D(0, 0, Height), Radius, 50);
+
+            BuildConeMesh(mesh, new Point3D(X, Y, Z), new Vector3D(0, 0, Height), Radius, 40);
 
             return mesh;
         }
@@ -28,7 +35,6 @@ namespace _3DViewer.Primitives
         public override void SaveToScene(Scene scene)
         {
             var obj = new Object3D();
-
             var props = new List<PropertyValue>();
             var propX = new PropertyValue
             {
@@ -65,14 +71,14 @@ namespace _3DViewer.Primitives
             };
             props.Add(propRadius);
 
-            obj.FigureType = _dbContext.FigureTypes.Where(t => t.Name == "Cylinder").SingleOrDefault();
+            obj.FigureType = _dbContext.FigureTypes.Where(t => t.Name == "Cone").SingleOrDefault();
             foreach (var p in props)
                 obj.PropertyValues.Add(p);
 
             scene.Object3Ds.Add(obj);
         }
-                
-        private void BuildCylinderMesh(MeshGeometry3D mesh, Point3D end_point, Vector3D axis, double radius, int num_sides)
+
+        private void BuildConeMesh(MeshGeometry3D mesh, Point3D end_point, Vector3D axis, double radius, int num_sides)
         {
             // Get two vectors perpendicular to the axis.
             Vector3D v1;
@@ -86,53 +92,29 @@ namespace _3DViewer.Primitives
             v1 *= (radius / v1.Length);
             v2 *= (radius / v2.Length);
 
-            // Make the top end cap.
+            // Make the bottom.
             double theta = 0;
             double dtheta = 2 * Math.PI / num_sides;
             for (int i = 0; i < num_sides; i++)
             {
-                Point3D p1 = end_point +
-                    Math.Cos(theta) * v1 +
-                    Math.Sin(theta) * v2;
+                Point3D p1 = end_point + Math.Cos(theta) * v1 + Math.Sin(theta) * v2;
                 theta += dtheta;
-                Point3D p2 = end_point +
-                    Math.Cos(theta) * v1 +
-                    Math.Sin(theta) * v2;
+                Point3D p2 = end_point + Math.Cos(theta) * v1 + Math.Sin(theta) * v2;
                 AddTriangle(mesh, end_point, p1, p2);
-            }
-
-            // Make the bottom end cap.
-            Point3D end_point2 = end_point + axis;
-            theta = 0;
-            for (int i = 0; i < num_sides; i++)
-            {
-                Point3D p1 = end_point2 +
-                    Math.Cos(theta) * v1 +
-                    Math.Sin(theta) * v2;
-                theta += dtheta;
-                Point3D p2 = end_point2 +
-                    Math.Cos(theta) * v1 +
-                    Math.Sin(theta) * v2;
-                AddTriangle(mesh, end_point2, p2, p1);
             }
 
             // Make the sides.
             theta = 0;
             for (int i = 0; i < num_sides; i++)
             {
-                Point3D p1 = end_point +
-                    Math.Cos(theta) * v1 +
-                    Math.Sin(theta) * v2;
+                Point3D p1 = end_point + Math.Cos(theta) * v1 + Math.Sin(theta) * v2;
                 theta += dtheta;
-                Point3D p2 = end_point +
-                    Math.Cos(theta) * v1 +
-                    Math.Sin(theta) * v2;
+                Point3D p2 = end_point + Math.Cos(theta) * v1 + Math.Sin(theta) * v2;
 
-                Point3D p3 = p1 + axis;
+                Point3D p3 = end_point + axis;
                 Point3D p4 = p2 + axis;
 
                 AddTriangle(mesh, p1, p3, p2);
-                AddTriangle(mesh, p2, p3, p4);
             }
         }
         private void AddTriangle(MeshGeometry3D mesh, Point3D point1, Point3D point2, Point3D point3)
@@ -147,9 +129,6 @@ namespace _3DViewer.Primitives
             mesh.TriangleIndices.Add(index2);
             mesh.TriangleIndices.Add(index3);
         }
-
-        // If the point already exists, return its index.
-        // Otherwise create the point and return its new index.
         private int AddPoint(Point3DCollection points, Point3D point)
         {
             // See if the point exists.

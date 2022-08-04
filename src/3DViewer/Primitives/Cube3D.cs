@@ -9,7 +9,7 @@ using System.Windows.Media.Media3D;
 
 namespace _3DViewer.Primitives
 {
-    class Cube3D : Figure3D
+    public class Cube3D : Figure3D
     {
         public double Side { get; set; }
         public Cube3D(Point3D insPoint, double side, _3DViewerContext context) : base(insPoint, context)
