@@ -59,7 +59,7 @@ namespace _3DViewer.Controls
             }
         }
 
-        public double Heihgt
+        public double Elevation
         {
             get
             {

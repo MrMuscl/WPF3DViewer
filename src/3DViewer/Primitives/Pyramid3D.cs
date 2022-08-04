@@ -33,7 +33,7 @@ namespace _3DViewer.Primitives
             normalCollection.Add(new Vector3D(0, 0, 1));
             normalCollection.Add(new Vector3D(0, 0, 1));
 
-            mesh.Normals = normalCollection;
+            //mesh.Normals = normalCollection;
 
             double o = Side / 2;
             double h = Height;

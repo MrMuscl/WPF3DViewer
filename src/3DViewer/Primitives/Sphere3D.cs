@@ -19,8 +19,7 @@ namespace _3DViewer.Primitives
         public override MeshGeometry3D GetMesh()
         {
             var mesh = new MeshGeometry3D();
-
-            AddSphere(mesh, new Point3D(X, Y, Z), Radius, 40, 40);
+            BuildSphereMesh(mesh, new Point3D(X, Y, Z), Radius, 40, 40);
 
             return mesh;
         }
@@ -66,7 +65,7 @@ namespace _3DViewer.Primitives
         }
 
 
-        private void AddSphere(MeshGeometry3D mesh, Point3D center, double radius, int num_phi, int num_theta)
+        private void BuildSphereMesh(MeshGeometry3D mesh, Point3D center, double radius, int num_phi, int num_theta)
         {
             double phi0, theta0;
             double dphi = Math.PI / num_phi;

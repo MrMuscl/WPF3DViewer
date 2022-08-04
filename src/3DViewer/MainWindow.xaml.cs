@@ -52,8 +52,6 @@ namespace _3DViewer
             SetupLight();
             ConfigureViewPortAndModelVisual();
         }
-
-
         private void SetupLight()
         {
             var ambientLight = new AmbientLight(Colors.LightGray);
@@ -124,12 +122,6 @@ namespace _3DViewer
             sphere.Properties.Add(_dbContext.Properties.Where(p => p.Name == "Radius").SingleOrDefault());
 
             _dbContext.SaveChanges();
-
-            
-            
-            
-                
-                //scene.Object3Ds.Add
         }
 
         private void ConfigureViewPortAndModelVisual()
@@ -137,9 +129,6 @@ namespace _3DViewer
             // Add the group of models to the ModelVisual3d.
             _modelVisual.Content = _model3DGroup;
             _viewPort.Children.Add(_modelVisual);
-
-            // Add surface plane
-            //AddPlane(new Point3D(0, 0, 0), 1000);
         }
 
         private void AddCube(Point3D pt, double size, Color color)
@@ -213,14 +202,14 @@ namespace _3DViewer
                                                       figurePropControl.Y,
                                                       figurePropControl.Z),
                                                       figurePropControl.Side,
-                                                      figurePropControl.Heihgt,
+                                                      figurePropControl.Elevation,
                                                       _dbContext);
                     break;
                 case FigureTypeEnum.Цилиндр:
                     figure = new Cylinder3D(new Point3D(figurePropControl.X,
                                                       figurePropControl.Y,
                                                       figurePropControl.Z),
-                                                      figurePropControl.Height,
+                                                      figurePropControl.Elevation,
                                                       figurePropControl.Radius,
                                                       _dbContext);                    
                     break;
@@ -251,7 +240,6 @@ namespace _3DViewer
         private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             _clickedPosition = e.GetPosition(this);
-            //UpdateUI();
 
             if (_clickedPosition.X <= _viewPort.ActualWidth &&
                 _clickedPosition.Y <= _viewPort.ActualHeight)
@@ -294,7 +282,6 @@ namespace _3DViewer
             }
 
             _clickedPosition = pos;
-            //UpdateUI();
         }
 
         private void Window_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
@@ -314,7 +301,6 @@ namespace _3DViewer
         private void Window_MouseWheel(object sender, MouseWheelEventArgs e)
         {
             MoveCamera(0, 0, Math.Sign(e.Delta));
-            //UpdateUI();
         }
 
         private void InsertButton_Click(object sender, RoutedEventArgs e)
@@ -374,9 +360,7 @@ namespace _3DViewer
                     return;
                 }
 
-                _model3DGroup.Children.Clear();
-                _model3DGroup.Children = new Model3DCollection();
-                SetupLight();
+                ClearScene();
 
                 foreach (var obj in scene.Object3Ds)
                 {
@@ -410,6 +394,21 @@ namespace _3DViewer
             {
                 MessageBox.Show(ex.Message);
             }
+        }
+
+        private void ButtonClear_Click(object sender, RoutedEventArgs e)
+        {
+            ClearScene();
+        }
+
+        private void ClearScene()
+        {
+            _model3DGroup.Children.Clear();
+            _model3DGroup.Children = new Model3DCollection();
+            _figures.Clear();
+            _figures = new List<Figure3D>();
+            
+            SetupLight();
         }
     }
 }

@@ -28,10 +28,9 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="3.5*"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <Viewport3D Grid.Column="0" Name="_viewPort" ClipToBounds="True">
+        <Viewport3D Grid.Column="0" Name="_viewPort" ClipToBounds="True" Margin="5">
             <Viewport3D.Camera>
                 <PerspectiveCamera x:Name="_camera"
                                    FarPlaneDistance="9000"
@@ -53,6 +52,7 @@
                         <RowDefinition Height="6*"/>
                         <RowDefinition/>
                         <RowDefinition/>
+                        <RowDefinition/>
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
@@ -70,13 +70,14 @@
                         <TextBox Name="sceneNameTextbox" Margin="2,2,2,2" HorizontalAlignment="Left" Width="120" Height="20"/>
                     </StackPanel>
                     <Button Grid.Row="2" Grid.Column="0" Margin="5" Width="80" Height="20" FontSize="12" HorizontalAlignment="Center" Click="ButtonSave_Click">Сохранить</Button>
-                    <Button Grid.Row="3" Grid.Column="1" Margin="5" Width="80" Height="20" FontSize="12" HorizontalAlignment="Center" Click="ButtonLoad_Click">Загрузить</Button>
+                    <Button Grid.Row="2" Grid.Column="1" Margin="5" Width="80" Height="20" FontSize="12" HorizontalAlignment="Center" Click="ButtonLoad_Click">Загрузить</Button>
+                    <Button Grid.Row="3" Grid.ColumnSpan="2" Margin="5" Width="80" Height="20" FontSize="12" HorizontalAlignment="Center" Click="ButtonClear_Click">Очистить</Button>
                 </Grid>
             </GroupBox>
             <GroupBox Header="Вставка:" Grid.Row="1">
                 <StackPanel Orientation="Vertical">
                     <ComboBox Name="figureTypeCombobox" Grid.Row="1" Margin="26, 0, 0, 0" 
-                              SelectedIndex="1" Width="150" Height="20"
+                              SelectedIndex="1" Width="150" Height="22"
                               ItemsSource="{Binding Source={StaticResource figureTypesEnum}}"
                               SelectionChanged="ComboBox_SelectionChanged"/>
 
@@ -86,6 +87,5 @@
                 </StackPanel>
             </GroupBox>
         </Grid>
-        <TextBox Name="logTextBox" Grid.Row="1" Grid.ColumnSpan="2" Margin="5,5,5,5" />
     </Grid>
 </Window>
