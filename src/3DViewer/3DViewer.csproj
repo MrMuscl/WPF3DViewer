@@ -60,6 +60,7 @@
     <ApplicationDefinition Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </ApplicationDefinition>
     <Page Include="Controls\FigurePropertiesControl.xaml">
       <SubType>Designer</SubType>
@@ -72,6 +73,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Compile>
     <Compile Include="Controls\FigurePropertiesControl.xaml.cs">
       <DependentUpon>FigurePropertiesControl.xaml</DependentUpon>
